@@ -9,6 +9,21 @@ const api = axios.create({
   }
 })
 
+// Request interceptor - Handle FormData
+api.interceptors.request.use(
+  (config) => {
+    // If FormData, remove Content-Type to let browser set it with boundary
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type']
+    }
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  }
+)
+
+// Response interceptor for error handling
 api.interceptors.response.use(
   (response) => response,
   (error) => {
